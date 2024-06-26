@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="https://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.28.xsd">
+    <changeSet id="1.0.0" author="eugene.sablya">
+        <createTable tableName="users">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="username" type="varchar(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="email" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.1" author="eugene.sablya">
+        <createTable tableName="roles">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="1.0.2" author="eugene.sablya">
+        <createTable tableName="user_roles">
+            <column name="user_id" type="bigint">
+            </column>
+
+            <column name="role_id" type="bigint">
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.3" author="eugene.sablya">
+        <addForeignKeyConstraint baseTableName="user_roles"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_user_roles_user"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="1.0.4" author="eugene.sablya">
+        <addForeignKeyConstraint baseTableName="user_roles"
+                                 baseColumnNames="role_id"
+                                 constraintName="fk_user_roles_roles"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedTableName="roles"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="1.0.5" author="eugene.sablya">
+        <insert tableName="roles">
+            <column name="name" value="ROLE_USER"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="name" value="ROLE_ADMIN"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="name" value="ROLE_MODERATOR">
+            </column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
