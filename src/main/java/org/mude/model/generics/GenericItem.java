@@ -4,19 +4,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Set;
 import java.util.UUID;
-@Getter
-@Setter
+@Data
 @MappedSuperclass
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 public class GenericItem {

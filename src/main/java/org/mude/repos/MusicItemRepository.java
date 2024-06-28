@@ -6,5 +6,4 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface MusicItemRepository extends JpaRepository<MusicItem, UUID> {
-    Optional <MusicItem> findMusicItemById(UUID id);
 }
