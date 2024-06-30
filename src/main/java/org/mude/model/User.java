@@ -11,8 +11,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
@@ -22,8 +24,8 @@ import java.util.UUID;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    @GeneratedValue
+    private UUID id ;
     @Column(name = "username")
     private String username;
     @Column(name = "password")
@@ -42,5 +44,15 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private Set<Role> roles;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_music_items",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "music_item_id", referencedColumnName = "id")})
+    private Set<MusicItem> musicItems;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_video_items",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "video_item_id", referencedColumnName = "id")})
+    private Set<VideoItem> videoItems;
 }
 

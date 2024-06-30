@@ -15,12 +15,10 @@ services:
     env_file: docker-compose.env
 
   keycloak:
-    image: bitnami/keycloak:latest
-    ports:
-      - "8180:8080"
+    image: jboss/keycloak:12.0.2
+
     environment:
       DB_VENDOR: POSTGRES
-      DB_ADDR: postgres
       DB_DATABASE: ${DB_NAME}
       DB_SCHEMA: public
       DB_USER: ${DB_USER}
@@ -31,4 +29,6 @@ services:
       - keycloak-network
     depends_on:
       - postgres
+    ports:
+      - ${PORTS}
     env_file: docker-compose.env

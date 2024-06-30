@@ -1,6 +1,5 @@
 package org.mude.service;
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.mude.model.Role;
 import org.mude.model.Status;
@@ -11,12 +10,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.mude.repos.RoleRepository;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -38,7 +35,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registerUser(User user) {
         Set<Role> roles = new HashSet<>();
-        Role role = roleRepository.findRole("ROLE_USER").orElse(null);
+        Role role = roleRepository.findRoleByName("ROLE_USER").orElse(null);
         if (role == null) {
             log.info("In registerUser role - {} not found", "ROLE_USER");
         }

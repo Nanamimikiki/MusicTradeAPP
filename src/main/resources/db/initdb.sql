@@ -13,6 +13,41 @@ CREATE TABLE IF NOT EXISTS roles (
     name VARCHAR(50) UNIQUE NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS music
+(
+    id    BIGSERIAL PRIMARY KEY NOT NULL,
+    title VARCHAR(100)          NOT NULL,
+    link VARCHAR(512) NOT NULL,
+    thumbnail_link VARCHAR(512) NOT NULL,
+    artist VARCHAR(100)          NOT NULL,
+    genre VARCHAR(50)          NOT NULL,
+    description VARCHAR(512),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    is_public BOOLEAN NOT NULL,
+    tags VARCHAR(512) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS video
+(
+    id          BIGSERIAL PRIMARY KEY NOT NULL,
+    title       VARCHAR(100)          NOT NULL,
+    description VARCHAR(512),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    is_public BOOLEAN NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS user_music_items (
+    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+    music_id BIGINT REFERENCES music(id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, music_id)
+);
+CREATE TABLE IF NOT EXISTS user_video_items(
+    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+    video_id BIGINT REFERENCES video(id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, video_id)
+);
 CREATE TABLE IF NOT EXISTS user_roles (
     user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
     role_id BIGINT REFERENCES roles(id) ON DELETE CASCADE,
