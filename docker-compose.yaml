@@ -5,7 +5,7 @@ services:
     image: postgres:16-alpine3.20
     restart: always
     ports:
-      - "5434:5434"
+      - "5432:5432"
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PWD}
@@ -28,15 +28,29 @@ services:
       - postgres
     env_file: docker-compose.env
 
-  webserver:
-    image: nginx:latest
-    container_name: nginxWebServer
-    ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      - NGINX_HOST=localhost
-      - NGINX_PORT=8080
+  minio:
+    image: minio/minio:latest
+    container_name: minioStorage
     restart: always
-    depends_on:
-      - postgres
+    volumes:
+      - /var/lib/docker/volumes/MusicTradeAPI/_data
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+    env_file: docker-compose.env
+
+
+#  webserver:
+#    image: nginx:latest
+#    container_name: nginxWebServer
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    environment:
+#      - NGINX_HOST=localhost
+#      - NGINX_PORT=8080
+#    restart: always
+#    depends_on:
+#      - postgres
