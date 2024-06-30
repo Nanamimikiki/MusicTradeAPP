@@ -26,8 +26,6 @@ services:
       KEYCLOAK_PASSWORD: ${KC_PWD}
     depends_on:
       - postgres
-    ports:
-      - "8181:8080"
     env_file: docker-compose.env
 
   webserver:
