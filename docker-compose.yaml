@@ -7,9 +7,10 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PWD}
-      - POSTGRES_DB=${DB_NAME}
+      POSTGRES_USER: ${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PWD}"
+      POSTGRES_DB: "${DB_NAME}"
+
     env_file: docker-compose.env
 
   keycloak:
@@ -18,12 +19,12 @@ services:
     restart: always
     environment:
       DB_VENDOR: POSTGRES
-      DB_DATABASE: ${DB_NAME}
+      DB_DATABASE: "${DB_NAME}@"
       DB_SCHEMA: public
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PWD}
-      KEYCLOAK_USER: ${KC_USER}
-      KEYCLOAK_PASSWORD: ${KC_PWD}
+      DB_USER: "${DB_USER}"
+      DB_PASSWORD: "${DB_PWD}"
+      KEYCLOAK_USER: "${KC_USER}"
+      KEYCLOAK_PASSWORD: "${KC_PWD}"
     depends_on:
       - postgres
     env_file: docker-compose.env
@@ -32,13 +33,11 @@ services:
     image: minio/minio:latest
     container_name: minioStorage
     restart: always
-    volumes:
-      - /var/lib/docker/volumes/MusicTradeAPI/_data
     ports:
       - '9000:9000'
       - '9001:9001'
     environment:
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_ACCESS_KEY: "${MINIO_ACCESS_KEY}"
     env_file: docker-compose.env
 
 
