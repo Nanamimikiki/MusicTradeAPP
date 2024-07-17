@@ -1,17 +1,17 @@
 version: "3.9"
 services:
-#  postgres:
-#    container_name: MusicTradeDB
-#    image: postgres:16-alpine3.20
-#    restart: always
-#    ports:
-#      - "5432:5432"
-#    environment:
-#      POSTGRES_USER: ${DB_USER}
-#      POSTGRES_PASSWORD: ${DB_PASS}
-#      POSTGRES_DB: ${DB_NAME}
-#    env_file: docker-compose.env
-#
+  postgres:
+    container_name: MusicTradeDB
+    image: postgres:16-alpine3.20
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    env_file: docker-compose.env
+
   minio:
     container_name: minio_storage
     image: minio/minio

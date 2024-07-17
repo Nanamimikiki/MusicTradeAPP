@@ -1,4 +1,8 @@
 package org.mude.service;
 
-public class MinioService {
+import java.io.InputStream;
+
+public interface MinioService {
+    void uploadFile(String objectName, InputStream inputStream);
+    String  downloadFile(String objectName);
 }

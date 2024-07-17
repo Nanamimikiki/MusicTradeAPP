@@ -3,13 +3,16 @@ package org.mude.config;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@Getter
 public class MinioConfig {
-    public static final String MUSIC_APP_BUCKET = "musicapp";
+    @Value("${minio.bucket-name}")
+    private String bucketName;
 
     @Value("${minio.url}")
     private String minioUrl;
@@ -26,11 +29,11 @@ public class MinioConfig {
                 .endpoint(minioUrl)
                 .credentials(minioUsername, minioPassword)
                 .build();
-        if (!client.bucketExists(BucketExistsArgs.builder().bucket(MUSIC_APP_BUCKET).build())) {
+        if (!client.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
             client.makeBucket(
                     MakeBucketArgs
                             .builder()
-                            .bucket(MUSIC_APP_BUCKET)
+                            .bucket(bucketName)
                             .build()
             );
         }
