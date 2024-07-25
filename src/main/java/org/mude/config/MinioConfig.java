@@ -11,8 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Getter
 public class MinioConfig {
-    @Value("${minio.bucket-name}")
-    private String bucketName;
 
     @Value("${minio.url}")
     private String minioUrl;
@@ -25,18 +23,9 @@ public class MinioConfig {
 
     @Bean
     public MinioClient minioClient() throws Exception {
-        MinioClient client = MinioClient.builder()
+        return MinioClient.builder()
                 .endpoint(minioUrl)
                 .credentials(minioUsername, minioPassword)
                 .build();
-        if (!client.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
-            client.makeBucket(
-                    MakeBucketArgs
-                            .builder()
-                            .bucket(bucketName)
-                            .build()
-            );
-        }
-        return client;
     }
 }
