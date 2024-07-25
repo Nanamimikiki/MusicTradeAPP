@@ -1,0 +1,32 @@
+package org.mude.rest;
+
+
+import lombok.extern.slf4j.Slf4j;
+import org.mude.model.User;
+import org.mude.service.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+@Slf4j
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    @Autowired
+    private UserServiceImpl userService;
+
+    @PostMapping("/register")
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
+        User registeredUser = userService.registerUser(user);
+        log.info("In registerUser - user {} registered successfully", user.getUsername());
+        return ResponseEntity.ok(registeredUser);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody User user) {
+        return userService.loginUser(user);
+    }
+}
