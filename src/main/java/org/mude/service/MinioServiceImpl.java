@@ -10,7 +10,11 @@ import io.minio.errors.InternalException;
 import io.minio.errors.InvalidResponseException;
 import io.minio.errors.ServerException;
 import io.minio.errors.XmlParserException;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.entity.ContentType;
+import org.checkerframework.checker.units.qual.A;
+import org.mude.service.i.MinioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,15 +25,16 @@ import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-
+@Slf4j
 @Service
-@RequiredArgsConstructor
 public class MinioServiceImpl implements MinioService {
     @Autowired
-    private final MinioClient minioClient;
+    private MinioClient minioClient;
 
-    @Value("${minio.bucket-name}")
-    private String bucketName;
+    @Autowired
+    public MinioServiceImpl(MinioClient minioClient) {
+        this.minioClient = minioClient;
+    }
 
     @Override
     public void uploadFile(String objectName, String bucketName, MultipartFile file) {
@@ -40,6 +45,7 @@ public class MinioServiceImpl implements MinioService {
             e.printStackTrace();
         }
     }
+
     @Override
     public byte[] downloadFile(String objectName, String bucketName) {
         try (InputStream stream = minioClient
