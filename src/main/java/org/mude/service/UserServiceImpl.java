@@ -5,6 +5,7 @@ import org.mude.model.Role;
 import org.mude.model.Status;
 import org.mude.model.User;
 import org.mude.repos.UserRepository;
+import org.mude.service.i.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

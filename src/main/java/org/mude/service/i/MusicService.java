@@ -1,4 +1,4 @@
-package org.mude.service;
+package org.mude.service.i;
 
 import org.mude.model.AudioItem;
 

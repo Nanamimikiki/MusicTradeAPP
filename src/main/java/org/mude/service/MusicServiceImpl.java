@@ -1,19 +1,19 @@
 package org.mude.service;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.mude.model.AudioItem;
 import org.mude.repos.MusicItemRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mude.service.i.MusicService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 @Service
 @Slf4j
-
 public class MusicServiceImpl implements MusicService {
 
-    @Autowired
+
     MusicItemRepository musicItemRepository;
 
     @Override
