@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 @RestController
-@RequestMapping("/image")
+@RequestMapping("/img")
 @Slf4j
 public class ImageController {
     @Value("${minio.image.bucket.name}")
