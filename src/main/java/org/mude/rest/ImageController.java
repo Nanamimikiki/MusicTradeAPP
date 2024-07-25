@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
+import java.util.Arrays;
 
 @RestController
-@RequestMapping("/images")
+@RequestMapping("/image")
 @Slf4j
 public class ImageController {
     @Value("${minio.image.bucket.name}")
@@ -22,36 +24,30 @@ public class ImageController {
     private MinioServiceImpl minioService;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file,
-                                              @RequestParam("fileName") String fileName) {
+    public ResponseEntity<String> uploadImage(@RequestParam("file")MultipartFile file,
+                                              @RequestParam("filename") String filename) {
         try {
-            if (!minioService.fileExists(bucketName, fileName)) {
-                minioService.uploadFile(bucketName, fileName, file);
-                log.info("In uploadImage - {} uploaded successfully", fileName);
+            if (!minioService.fileExists(bucketName, filename)) {
+                minioService.uploadFile(bucketName, filename, file);
+                log.info("Image uploaded successfully");
                 return ResponseEntity.ok("Image uploaded successfully.");
             } else {
-                log.info("Image with name - {} already exists!", fileName);
                 return ResponseEntity.badRequest().body("File already exists.");
             }
         } catch (Exception e) {
-            log.error("Error uploading file: {}", e.getMessage());
             return ResponseEntity.status(500).body("Error uploading file: " + e.getMessage());
         }
     }
-
     @PostMapping("/download")
-    public ResponseEntity<byte[]> downloadImage(@RequestParam("fileName") String fileName, String bucketName) {
+    public ResponseEntity<byte[]> downloadImage(@RequestParam("filename") String filename, String bucketName) {
         try {
-            byte[] fileBytes = minioService.downloadFile(bucketName, fileName);
-            if (fileBytes != null) {
-                log.info("Image {} downloaded successfully", fileName);
+            byte[] fileBytes = minioService.downloadFile(bucketName, filename);
+            if (fileBytes!= null) {
                 return ResponseEntity.ok().body(fileBytes);
             } else {
-                log.info("Image {} not found!", fileName);
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
-            log.error("Error downloading file: {}", e.getMessage());
             return ResponseEntity.status(500).body(null);
         }
     }
