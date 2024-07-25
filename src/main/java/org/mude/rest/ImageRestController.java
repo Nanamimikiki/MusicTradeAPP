@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/images")
 @Slf4j
-public class ImageController {
+public class ImageRestController {
     @Value("${minio.image.bucket.name}")
     private String bucketName;
     @Autowired

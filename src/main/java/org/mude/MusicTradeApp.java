@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
-public class MusicTradeApiApplication {
+public class MusicTradeApp {
 
     public static void main(String[] args) {
 
-		SpringApplication.run(MusicTradeApiApplication.class, args);
+		SpringApplication.run(MusicTradeApp.class, args);
 
     }
 	@Bean
