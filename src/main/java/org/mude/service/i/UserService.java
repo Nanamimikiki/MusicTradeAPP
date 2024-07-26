@@ -8,6 +8,8 @@ import java.util.UUID;
 public interface UserService {
     User registerUser(User user);
 
+    User loginUser(User user);
+
     List<User> getAllUsers();
 
     List<User> getBannedUsers();
@@ -26,4 +28,6 @@ public interface UserService {
 
     void unbanUser(String username);
 
+
+    User loginUser(String username, String password);
 }

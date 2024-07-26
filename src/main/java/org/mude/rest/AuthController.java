@@ -18,15 +18,22 @@ public class AuthController {
     @Autowired
     private UserServiceImpl userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
+    @PostMapping("/add/user")
+    public ResponseEntity<User> addUser(@RequestBody User user) {
         User registeredUser = userService.registerUser(user);
-        log.info("In registerUser - user {} registered successfully", user.getUsername());
-        return ResponseEntity.ok(registeredUser);
+        if (registeredUser != null) {
+            log.info("In registerUser - user {} registered successfully", user.getUsername());
+            return ResponseEntity.ok(registeredUser);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody User user) {
-        return userService.loginUser(user);
-    }
+    public ResponseEntity<User> loginUser(@RequestBody User user) {
+        User lUser = userService.loginUser(user);
+        if (lUser != null) {
+            return ResponseEntity.ok(lUser);
+        }
+        return ResponseEntity.badRequest().build();
+        }
 }
