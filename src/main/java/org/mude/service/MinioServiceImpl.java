@@ -10,13 +10,9 @@ import io.minio.errors.InternalException;
 import io.minio.errors.InvalidResponseException;
 import io.minio.errors.ServerException;
 import io.minio.errors.XmlParserException;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.entity.ContentType;
-import org.checkerframework.checker.units.qual.A;
 import org.mude.service.i.MinioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

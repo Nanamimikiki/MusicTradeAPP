@@ -49,6 +49,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User loginUser(User user) {
+        User foundUser = userRepository.findByUsername(user.getUsername()).orElse(null);
+        if (foundUser == null) {
+            log.info("In loginUser - user with username {} was not found", user.getUsername());
+            return null;
+        }
+        if (!passwordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
+            log.info("In loginUser - password does not match for user {}", user.getUsername());
+            return null;
+        }
+        log.info("In loginUser - user {} successfully logged in", foundUser);
+        return foundUser;
+    }
+
+
+    @Override
     public List<User> getAllUsers() {
         List<User> users = userRepository.findAll();
         log.info("In getAllUsers - {} users found", users.size());
@@ -139,5 +155,19 @@ public class UserServiceImpl implements UserService {
         user.setStatus(Status.ACTIVE);
         userRepository.save(user);
         log.info("In unbanUser - user {} was unbanned", username);
+    }
+    @Override
+    public User loginUser(String username, String password) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user != null) {
+            if (user.getPassword().equals(passwordEncoder.encode(password))) {
+                log.info("User {} logged in successfully", username);
+                return user;
+            }
+            log.info("In loginUser - password does not match for user {}", username);
+            return null;
+        }
+        log.info("In loginUser - user with username {} was not found", username);
+        return null;
     }
 }
