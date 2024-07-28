@@ -32,8 +32,10 @@ public class AuthController {
     public ResponseEntity<User> loginUser(@RequestBody User user) {
         User lUser = userService.loginUser(user);
         if (lUser != null) {
+            log.info("In loginUser - user {} logged in successfully", user.getUsername());
             return ResponseEntity.ok(lUser);
         }
+        log.info("Bad credentials!");
         return ResponseEntity.badRequest().build();
         }
 }
