@@ -24,7 +24,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class KeycloakSecurityConfig {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -35,11 +35,12 @@ public class SecurityConfig {
 
     @Bean
     public KeycloakConfigResolver keycloakConfigResolver() {
+
         return new KeycloakSpringBootConfigResolver();
     }
 
     @Bean
-    protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
+    public SessionAuthenticationStrategy sessionAuthenticationStrategy() {
         return new NullAuthenticatedSessionStrategy();
     }
 
@@ -48,10 +49,10 @@ public class SecurityConfig {
         http
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/admin/**").hasRole("admin")
-                        .requestMatchers("/api/moderator/**").hasRole("moderator")
-                        .requestMatchers("/api/vip/**").hasRole("vip")
-                        .requestMatchers("/api/user/**").hasRole("user")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/moderator/**").hasRole("MODERATOR")
+                        .requestMatchers("/api/vip/**").hasRole("VIP_USER")
+                        .requestMatchers("/api/user/**").hasRole("REGULAR_USER")
                         .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -83,10 +84,10 @@ public class SecurityConfig {
         return new KeycloakAuthenticationProvider();
     }
 
-    private JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE");
+            grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
