@@ -1,5 +1,7 @@
 package org.mude.service;
+
 import jakarta.ws.rs.core.Response;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
@@ -7,9 +9,13 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.mude.model.User;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import java.util.Collections;
 
+import java.util.Collections;
+import java.util.UUID;
+
+@Getter
 @Slf4j
 @Service
 public class KeycloakService {
@@ -32,34 +38,54 @@ public class KeycloakService {
     @Value("${keycloak-admin-password}")
     private String keycloakAdminPassword;
 
-    public void registerUser(User user) {
-        try (Keycloak keycloak = KeycloakBuilder.builder()
-                .serverUrl(keycloakServerUrl)
-                .realm("MusicTradeAppRealm")
-                .clientId("admin-cli")
-                .username(keycloakAdminUsername)
-                .password(keycloakAdminPassword)
-                .build()) {
+    private void getUser() throws Exception {
 
-            UserRepresentation userRepresentation = new UserRepresentation();
-            userRepresentation.setUsername(user.getUsername());
-            userRepresentation.setEmail(user.getEmail());
-            userRepresentation.setCreatedTimestamp(user.getCreatedAt().getTime());
-            userRepresentation.setEnabled(true);
+    }
 
-            CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
-            credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
-            credentialRepresentation.setValue(user.getPassword());
-            userRepresentation.setCredentials(Collections.singletonList(credentialRepresentation));
-
-            try (Response response = keycloak.realm(keycloakRealm).users().create(userRepresentation)) {
-                if (response.getStatus() != 201) {
-                    log.error("Failed to create user: {}", response.readEntity(String.class));
-                    throw new RuntimeException("Failed to create user");
-                }
+    public Keycloak keycloakBuilder() {
+            try {
+                return KeycloakBuilder.builder()
+                        .serverUrl(keycloakServerUrl)
+                        .realm("MusicTradeAppRealm")
+                        .clientId(keycloakClientId)
+                        .clientSecret(keycloakClientSecret)
+                        .username(keycloakAdminUsername)
+                        .password(keycloakAdminPassword)
+                        .build();
+            } catch (Exception e) {
+                log.error("Error while creating Keycloak client", e);
+                return null;
             }
         }
+
+
+        public void registerUser(User user) throws Exception {
+            Keycloak keycloakBuilder = keycloakBuilder();
+            try {
+
+                UserRepresentation userRepresentation = new UserRepresentation();
+                userRepresentation.setUsername(userRepresentation.getUsername());
+                userRepresentation.setEmail(userRepresentation.getEmail());
+                userRepresentation.setCreatedTimestamp(userRepresentation.getCreatedTimestamp());
+                userRepresentation.setEnabled(true);
+                CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
+                userRepresentation.setCredentials(Collections.singletonList(credentialRepresentation));
+                credentialRepresentation = new CredentialRepresentation();
+                credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
+                credentialRepresentation.setValue(user.getPassword());
+
+
+                try (Response response = keycloakBuilder.realm(keycloakRealm).users().create(userRepresentation)) {
+                    if (response.getStatus() != 201) {
+                        log.error("Failed to create user: {}", response.readEntity(String.class));
+                        throw new RuntimeException("Failed to create user");
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Error while registering user", e);
+            }
+            keycloakBuilder.close();
+        }
     }
-}
 
 
