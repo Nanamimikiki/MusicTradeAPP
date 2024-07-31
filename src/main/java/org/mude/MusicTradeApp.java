@@ -13,8 +13,4 @@ public class MusicTradeApp {
 		SpringApplication.run(MusicTradeApp.class, args);
 
     }
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
 }
