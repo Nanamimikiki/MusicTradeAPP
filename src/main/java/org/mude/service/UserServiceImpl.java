@@ -156,6 +156,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         log.info("In unbanUser - user {} was unbanned", username);
     }
+
     @Override
     public User loginUser(String username, String password) {
         User user = userRepository.findByUsername(username).orElse(null);
