@@ -36,7 +36,7 @@ public class User {
     private String email;
 
     @Column(name = "created")
-    private Date createdAt;
+    private Date registrationDate;
 
     @Column(name = "updated")
     private Date updatedAt;
