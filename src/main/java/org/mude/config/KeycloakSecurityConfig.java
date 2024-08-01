@@ -36,7 +36,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/moderator/**").hasRole("MODERATOR")
                         .requestMatchers("/api/vip/**").hasRole("VIP_USER")
-                        .requestMatchers("/api/user/**").hasRole("REGULAR_USER")
+                        .requestMatchers("/api/users/**").hasRole("REGULAR_USER")
                         .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -53,11 +53,11 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 
     @Override
     public void init(WebSecurity builder) throws Exception {
-
+        builder.ignoring().requestMatchers("/h2-console/**");
     }
 
     @Override
     public void configure(WebSecurity builder) throws Exception {
-
+        builder.ignoring().requestMatchers("/h2-console/**");
     }
 }
