@@ -1,5 +1,4 @@
 package org.mude.service;
-
 import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -35,15 +34,11 @@ public class KeycloakService {
     @Value("${keycloak-admin-password}")
     private String keycloakAdminPassword;
 
-    private void getUser() throws Exception {
-
-    }
-
-    public Keycloak keycloakBuilder() {
+    private Keycloak keycloakBuilder() {
         try {
             return KeycloakBuilder.builder()
                     .serverUrl(keycloakServerUrl)
-                    .realm("MusicTradeAppRealm")
+                    .realm(keycloakRealm)
                     .clientId(keycloakClientId)
                     .clientSecret(keycloakClientSecret)
                     .username(keycloakAdminUsername)
@@ -56,19 +51,18 @@ public class KeycloakService {
     }
 
     public void registerUser(User user) throws Exception {
-        Keycloak keycloakBuilder = keycloakBuilder();
-        try {
+        try (Keycloak keycloak = keycloakBuilder()) {
             UserRepresentation userRepresentation = new UserRepresentation();
-            userRepresentation.setUsername(userRepresentation.getUsername());
-            userRepresentation.setEmail(userRepresentation.getEmail());
-            userRepresentation.setCreatedTimestamp(userRepresentation.getCreatedTimestamp());
+            userRepresentation.setUsername(user.getUsername());
+            userRepresentation.setEmail(user.getEmail());
             userRepresentation.setEnabled(true);
+
             CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
-            userRepresentation.setCredentials(Collections.singletonList(credentialRepresentation));
-            credentialRepresentation = new CredentialRepresentation();
             credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
             credentialRepresentation.setValue(user.getPassword());
-            try (Response response = keycloakBuilder.realm(keycloakRealm).users().create(userRepresentation)) {
+            userRepresentation.setCredentials(Collections.singletonList(credentialRepresentation));
+
+            try (Response response = keycloak.realm(keycloakRealm).users().create(userRepresentation)) {
                 if (response.getStatus() != 201) {
                     log.error("Failed to create user: {}", response.readEntity(String.class));
                     throw new RuntimeException("Failed to create user");
@@ -76,9 +70,7 @@ public class KeycloakService {
             }
         } catch (Exception e) {
             log.error("Error while registering user", e);
+            throw e;
         }
-        keycloakBuilder.close();
     }
 }
-
-

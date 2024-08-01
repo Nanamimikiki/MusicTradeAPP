@@ -1,32 +1,24 @@
 package org.mude.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
-import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
-import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+
 
 @Slf4j
 @Configuration
 @EnableWebSecurity
 @KeycloakConfiguration
-public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
-
-    @Override
-    protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
-        return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
-    }
+public class KeycloakSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -46,18 +38,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         return http.build();
     }
     @Bean
-    protected void configure(HttpSecurity http) throws Exception {
-        securityFilterChain(http);
-    }
-
-
-    @Override
-    public void init(WebSecurity builder) throws Exception {
-        builder.ignoring().requestMatchers("/h2-console/**");
-    }
-
-    @Override
-    public void configure(WebSecurity builder) throws Exception {
-        builder.ignoring().requestMatchers("/h2-console/**");
+    public KeycloakSpringBootConfigResolver KeycloakConfigResolver() {
+        return new KeycloakSpringBootConfigResolver();
     }
 }
