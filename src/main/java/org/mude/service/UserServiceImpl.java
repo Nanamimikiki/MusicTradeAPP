@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.mude.repos.RoleRepository;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -86,6 +87,10 @@ public class UserServiceImpl implements UserService {
         log.info("In getUsersWithRole - {} users with role {} found", usersWithRole.size(), role);
         return usersWithRole;
     }
+    @Override
+    public List<User> findUsersRegisteredBetween(LocalDate start, LocalDate end) {
+        return userRepository.findByRegistrationDateBetween(start, end);
+    }
 
     @Override
     public User getUser(String username) {
@@ -103,6 +108,16 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userID).orElse(null);
         if (user == null) {
             log.info("In getUser - user with ID {} was not found", userID);
+            return null;
+        }
+        return user;
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            log.info("In getUserByEmail - user with email {} was not found", email);
             return null;
         }
         return user;
@@ -170,5 +185,24 @@ public class UserServiceImpl implements UserService {
         }
         log.info("In loginUser - user with username {} was not found", username);
         return null;
+    }
+
+    @Override
+    public void updateUserEmail(UUID userId, String newEmail) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            user.setEmail(newEmail);
+            userRepository.save(user);
+            log.info("User with ID {} updated email to {}", userId, newEmail);
+        }
+    }
+
+    @Override
+    public void deleteUser(UUID userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user!= null) {
+            userRepository.delete(user);
+            log.info("User with ID {} deleted successfully", userId);
+        }
     }
 }

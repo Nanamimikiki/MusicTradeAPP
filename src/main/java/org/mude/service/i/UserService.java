@@ -2,6 +2,7 @@ package org.mude.service.i;
 
 import org.mude.model.User;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +20,7 @@ public interface UserService {
     User getUser(String username);
 
     User getUser(UUID userID);
+    User getUserByEmail(String email);
 
     void banUser(String username);
 
@@ -28,6 +30,10 @@ public interface UserService {
 
     void unbanUser(String username);
 
-
+    List<User> findUsersRegisteredBetween(LocalDate start, LocalDate end);
     User loginUser(String username, String password);
+
+    void updateUserEmail(UUID userId, String newEmail);
+
+    void deleteUser(UUID userId);
 }

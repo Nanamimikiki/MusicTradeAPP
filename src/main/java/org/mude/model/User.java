@@ -25,29 +25,38 @@ public class User {
     @Id
     @GeneratedValue
     private UUID id ;
+
     @Column(name = "username")
     private String username;
+
     @Column(name = "password")
     private String password;
+
     @Column(name = "email")
     private String email;
+
     @Column(name = "created")
     private Date createdAt;
+
     @Column(name = "updated")
     private Date updatedAt;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private Set<Role> roles;
+
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_auido_items",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "audio_item_id", referencedColumnName = "id")})
     private Set<AudioItem> audioItems;
+
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_video_items",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
