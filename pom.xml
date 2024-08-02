@@ -55,7 +55,6 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-jose</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -98,7 +97,6 @@
 <!--            <version>3.1.1</version>-->
 <!--        </dependency>-->
 
-
         <!--JUNIT-->
 
         <dependency>
@@ -129,7 +127,6 @@
             <artifactId>keycloak-spring-boot-starter</artifactId>
             <version>24.0.5</version>
         </dependency>
-
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-server-spi</artifactId>
