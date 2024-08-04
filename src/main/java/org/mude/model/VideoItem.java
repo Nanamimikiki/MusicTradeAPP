@@ -8,4 +8,5 @@ import org.mude.model.generics.GenericItem;
 @Table(name = "video")
 @Entity
 public class VideoItem extends GenericItem {
+    public String genre;
 }
