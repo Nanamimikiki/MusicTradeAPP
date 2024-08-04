@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface VideoService {
-    VideoItem createMusicItem(VideoItem videoItemm);
-    List<VideoItem> getMusicItemsByArtist(String artist);
-    List<VideoItem> getMusicItemsByTitle(String title);
-    List<VideoItem> getMusicItemsByGenre(String genre);
-    List<VideoItem> getAllMusicItems();
-    VideoItem getMusicItemById(UUID id);
+    VideoItem createVideoItem(VideoItem videoItem);
+    List<VideoItem> getVideoItemsByArtist(String artist);
+    List<VideoItem> getVideoItemsByTitle(String title);
+    List<VideoItem> getVideoItemsByGenre(String genre);
+    List<VideoItem> getAllVideoItems();
+    VideoItem getVideoItemById(UUID id);
 }
