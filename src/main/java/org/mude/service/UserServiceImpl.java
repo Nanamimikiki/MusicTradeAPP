@@ -11,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.mude.repos.RoleRepository;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
         return usersWithRole;
     }
     @Override
-    public List<User> findUsersRegisteredBetween(LocalDate start, LocalDate end) {
+    public List<User> findUsersRegisteredBetween(Date start, Date end) {
         return userRepository.findByRegistrationDateBetween(start, end);
     }
 

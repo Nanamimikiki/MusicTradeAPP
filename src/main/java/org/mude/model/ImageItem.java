@@ -7,17 +7,14 @@ import lombok.Data;
 import org.mude.model.generics.GenericItem;
 
 import java.util.Date;
-
 @Data
 @Entity
-@Table(name = "audio")
-public class AudioItem extends GenericItem {
-    @Column(name = "artist")
-    private String artist;
-    @Column(name = "album")
-    private String album;
+@Table(name = "images")
+public class ImageItem extends GenericItem {
     @Column(name = "genre")
-    private String genre;
+    public String genre;
+    @Column(name = "artist")
+    public String artist;
     @Column(name = "thumbnail_link")
     private String thumbnailLink;
     @Column(name = "release_date")

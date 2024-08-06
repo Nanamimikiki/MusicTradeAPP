@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,7 +46,7 @@ public class UserRestController {
     }
 
     @GetMapping("/registered")
-    public ResponseEntity<List<User>> getUsersRegisteredBetween(@RequestParam LocalDate start, @RequestParam LocalDate end) {
+    public ResponseEntity<List<User>> getUsersRegisteredBetween(@RequestParam Date start, @RequestParam Date end) {
         return ResponseEntity.ok(userService.findUsersRegisteredBetween(start, end));
     }
 }

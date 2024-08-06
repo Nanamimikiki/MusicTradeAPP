@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.mude.model.VideoItem;
 import org.mude.repos.VideoItemRepository;
 import org.mude.service.i.VideoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class VideoServiceImpl implements VideoService {
-
+    @Autowired
     private VideoItemRepository videoItemRepository;
 
     @Override
@@ -25,7 +26,7 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public List<VideoItem> getVideoItemsByArtist(String artist) {
         List<VideoItem> videos = new ArrayList<>(videoItemRepository.findAll().stream()
-                .filter(videoItem -> videoItem.getOwner().equals(artist)).toList());
+                .filter(videoItem -> videoItem.getArtist().equals(artist)).toList());
         log.info("Found {} videos by artist {}", videos.size(), artist);
         return videos;
     }

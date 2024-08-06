@@ -7,9 +7,21 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+    env_file: docker-compose.env
+
+  postgres_kc:
+    container_name: PostgresKC
+    image: postgres:16-alpine3.20
+    restart: always
+    ports:
+      - "5436:5436"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${KC_DB_NAME}
     env_file: docker-compose.env
 
   minio:
@@ -23,41 +35,25 @@ services:
     volumes:
         - /minio_storage:/data
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
-
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     command: server --console-address ":9001" /data
 
   keycloak:
     image: quay.io/keycloak/keycloak:20.0.2
     container_name: keycloak
     command:
-      - start --auto-build --db postgres --hostname-strict-https false --hostname-strict false --proxy edge --http-enabled true --import-realm --spi-user-profile-legacy-user-profile-read-only-attributes *_RES_ACCESS_MODE
+      - start --auto-build --db MusicTradeKCDB --hostname-strict-https false --hostname-strict false --proxy edge --http-enabled true --import-realm --spi-user-profile-legacy-user-profile-read-only-attributes *_RES_ACCESS_MODE
     environment:
-      KC_DB_URL: jdbc:postgresql://keycloak-postgres:5432/postgres
-      KC_DB_USERNAME: postgres
-      KC_DB_PASSWORD: postgres
+      KC_DB_URL: ${KC_DB_URL}
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KC_DB_SCHEMA: public
       KC_FEATURES: preview
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_ADMIN: ${KC_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KC_PASSWORD}
     ports:
       - "8282:8080"
     depends_on:
-      - postgres
-
-    #  keycloak:
-    #    image: bitnami/keycloak:latest
-    #    container_name: keycloakAuthentication
-    #    restart: always
-    #    environment:
-    #      DB_VENDOR: POSTGRES
-    #      DB_DATABASE: ${DB_NAME}
-    #      DB_SCHEMA: public
-    #      DB_USER: ${DB_USER}
-    #      DB_PASSWORD: ${DB_PASS}
-    #      KEYCLOAK_USER: ${KC_USER}
-    #      KEYCLOAK_PASSWORD: ${KC_PWD}
-    #    depends_on:
-    #      - postgres
-    #    env_file: docker-compose.env
+      - postgres_kc
+    env_file: docker-compose.env
