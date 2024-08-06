@@ -5,7 +5,7 @@ import org.mude.model.AudioItem;
 import java.util.List;
 import java.util.UUID;
 
-public interface MusicService {
+public interface AudioService {
     AudioItem createMusicItem(AudioItem musicItem);
     List<AudioItem> getMusicItemsByArtist(String artist);
     List<AudioItem> getMusicItemsByTitle(String title);

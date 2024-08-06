@@ -28,8 +28,6 @@ public class GenericItem {
     private String link;
     @Column(name = "type", nullable = false)
     private String type;
-    @Column(name = "price", nullable = false)
-    private double price;
     @Column(name = "created_at", nullable = false)
     private Date createdAt;
     @Column(name = "updated_at")
@@ -38,8 +36,6 @@ public class GenericItem {
     private String description;
     @Column(name = "is_public", nullable = false)
     private boolean isPublic;
-    @Column(name = "thumbnail_link")
-    private String thumbnailLink;
     @ElementCollection
     @Column(name = "tags",nullable = false)
     private Set<String> tags;
