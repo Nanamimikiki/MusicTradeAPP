@@ -1,7 +1,7 @@
-package org.mude.service.i;
+package org.mude.service;
 
 import org.keycloak.admin.client.Keycloak;
-import org.mude.model.User;
+
 import java.util.Map;
 
 public interface KeycloakService {

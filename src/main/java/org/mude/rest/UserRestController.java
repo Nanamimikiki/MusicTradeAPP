@@ -1,7 +1,7 @@
 package org.mude.rest;
 
 import org.mude.model.User;
-import org.mude.service.UserServiceImpl;
+import org.mude.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;

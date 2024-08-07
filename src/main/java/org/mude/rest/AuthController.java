@@ -3,7 +3,7 @@ package org.mude.rest;
 
 import lombok.extern.slf4j.Slf4j;
 import org.mude.model.User;
-import org.mude.service.UserServiceImpl;
+import org.mude.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

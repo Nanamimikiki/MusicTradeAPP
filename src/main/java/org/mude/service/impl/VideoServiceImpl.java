@@ -1,9 +1,9 @@
-package org.mude.service;
+package org.mude.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.mude.model.VideoItem;
-import org.mude.repos.VideoItemRepository;
-import org.mude.service.i.VideoService;
+import org.mude.repository.VideoItemRepository;
+import org.mude.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

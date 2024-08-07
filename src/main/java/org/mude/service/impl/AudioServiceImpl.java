@@ -1,10 +1,10 @@
-package org.mude.service;
+package org.mude.service.impl;
 
 
 import lombok.extern.slf4j.Slf4j;
 import org.mude.model.AudioItem;
-import org.mude.repos.AudioItemRepository;
-import org.mude.service.i.AudioService;
+import org.mude.repository.AudioItemRepository;
+import org.mude.service.AudioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

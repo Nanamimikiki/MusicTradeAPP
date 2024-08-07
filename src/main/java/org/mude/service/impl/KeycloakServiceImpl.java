@@ -1,4 +1,4 @@
-package org.mude.service;
+package org.mude.service.impl;
 
 import jakarta.ws.rs.core.Response;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.mude.service.i.KeycloakService;
+import org.mude.service.KeycloakService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

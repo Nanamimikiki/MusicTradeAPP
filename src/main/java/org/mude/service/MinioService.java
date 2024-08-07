@@ -1,9 +1,6 @@
-package org.mude.service.i;
+package org.mude.service;
 
-import org.hibernate.cache.spi.support.StorageAccess;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.InputStream;
 
 public interface MinioService {
 

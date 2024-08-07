@@ -1,4 +1,4 @@
-package org.mude.repos;
+package org.mude.repository;
 
 
 import org.mude.model.ImageItem;

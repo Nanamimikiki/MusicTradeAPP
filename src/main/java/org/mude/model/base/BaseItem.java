@@ -1,4 +1,4 @@
-package org.mude.model.generics;
+package org.mude.model.base;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Data
 @MappedSuperclass
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-public class GenericItem {
+public class BaseItem {
     @Id
     @GeneratedValue
     @Column(name = "id", nullable = false)

@@ -4,14 +4,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
-import org.mude.model.generics.GenericItem;
+import org.mude.model.base.BaseItem;
 
 import java.util.Date;
 
 @Data
 @Entity
 @Table(name = "audio")
-public class AudioItem extends GenericItem {
+public class AudioItem extends BaseItem {
     @Column(name = "artist")
     private String artist;
     @Column(name = "album")

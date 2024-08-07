@@ -1,4 +1,4 @@
-package org.mude.service.i;
+package org.mude.service;
 
 public interface ImageService {
 }

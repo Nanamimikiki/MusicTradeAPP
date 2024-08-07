@@ -1,15 +1,15 @@
-package org.mude.service;
+package org.mude.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.mude.model.Role;
 import org.mude.model.Status;
 import org.mude.model.User;
-import org.mude.repos.UserRepository;
-import org.mude.service.i.UserService;
+import org.mude.repository.UserRepository;
+import org.mude.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.mude.repos.RoleRepository;
+import org.mude.repository.RoleRepository;
 
 import java.util.Date;
 import java.util.HashSet;
