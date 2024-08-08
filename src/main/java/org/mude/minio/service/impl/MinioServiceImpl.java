@@ -1,4 +1,4 @@
-package org.mude.service.impl;
+package org.mude.minio.service.impl;
 
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
@@ -11,7 +11,7 @@ import io.minio.errors.InvalidResponseException;
 import io.minio.errors.ServerException;
 import io.minio.errors.XmlParserException;
 import lombok.extern.slf4j.Slf4j;
-import org.mude.service.MinioService;
+import org.mude.minio.service.MinioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

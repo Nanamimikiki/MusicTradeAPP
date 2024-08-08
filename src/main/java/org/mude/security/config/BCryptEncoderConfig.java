@@ -1,4 +1,4 @@
-package org.mude.config;
+package org.mude.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package org.mude.service;
+package org.mude.minio.service;
 
 import org.springframework.web.multipart.MultipartFile;
 

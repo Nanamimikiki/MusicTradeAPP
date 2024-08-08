@@ -1,4 +1,4 @@
-package org.mude.config;
+package org.mude.security.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
@@ -19,7 +19,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @KeycloakConfiguration
 public class KeycloakSecurityConfig {
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -37,6 +36,7 @@ public class KeycloakSecurityConfig {
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(new JwtAuthenticationConverter())));
         return http.build();
     }
+
     @Bean
     public KeycloakSpringBootConfigResolver KeycloakConfigResolver() {
         return new KeycloakSpringBootConfigResolver();

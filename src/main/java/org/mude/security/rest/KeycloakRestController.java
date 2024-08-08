@@ -1,4 +1,4 @@
-package org.mude.rest;
+package org.mude.security.rest;
 
 import lombok.extern.slf4j.Slf4j;
 import org.mude.service.impl.KeycloakServiceImpl;
