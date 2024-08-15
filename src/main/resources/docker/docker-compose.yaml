@@ -5,24 +5,22 @@ services:
     image: postgres:16-alpine3.20
     restart: always
     ports:
-      - "5432:5432"
+      - "5434:5432"  # Maps container's port 5432 to host's port 5434
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-    env_file: docker-compose.env
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: MusicTradeDB
 
   postgres_kc:
-    container_name: PostgresKC
+    container_name: KeycloakAuthDB
     image: postgres:16-alpine3.20
     restart: always
     ports:
-      - "5436:5436"
+      - "5432:5432"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${KC_DB_NAME}
-    env_file: docker-compose.env
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: KeycloakAuthDB
 
   minio:
     container_name: minio_storage
@@ -33,27 +31,24 @@ services:
       - "9000:9000"
       - "9001:9001"
     volumes:
-        - /minio_storage:/data
+      - ./minio_storage:/data
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
     command: server --console-address ":9001" /data
 
   keycloak:
-    image: quay.io/keycloak/keycloak:20.0.2
+    image: bitnami/keycloak
     container_name: keycloak
-    command:
-      - start --auto-build --db MusicTradeKCDB --hostname-strict-https false --hostname-strict false --proxy edge --http-enabled true --import-realm --spi-user-profile-legacy-user-profile-read-only-attributes *_RES_ACCESS_MODE
     environment:
-      KC_DB_URL: ${KC_DB_URL}
-      KC_DB_USERNAME: ${POSTGRES_USER}
-      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_DB_URL: jdbc:postgresql://postgres_kc:5432/KeycloakAuthDB
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
       KC_DB_SCHEMA: public
       KC_FEATURES: preview
-      KEYCLOAK_ADMIN: ${KC_USER}
-      KEYCLOAK_ADMIN_PASSWORD: ${KC_PASSWORD}
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin-password
     ports:
-      - "8282:8080"
+      - "8080:8080"
     depends_on:
       - postgres_kc
-    env_file: docker-compose.env
