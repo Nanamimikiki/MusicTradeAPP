@@ -17,12 +17,12 @@ public class AudioServiceImpl implements AudioService {
     AudioItemRepository musicItemRepository;
 
     @Override
-    public AudioItem createMusicItem(AudioItem musicItem) {
+    public AudioItem createAudioItem(AudioItem musicItem) {
         return musicItemRepository.save(musicItem);
     }
 
     @Override
-    public List<AudioItem> getMusicItemsByArtist(String artist) {
+    public List<AudioItem> getAudioItemsByArtist(String artist) {
         List<AudioItem> allMusicByArtist = musicItemRepository.findAll().stream()
                 .filter(MusicItem -> MusicItem.getArtist().equals(artist)).toList();
         log.info("In getMusicItemsByArtist - {} music items found", allMusicByArtist.size());
@@ -30,7 +30,7 @@ public class AudioServiceImpl implements AudioService {
     }
 
     @Override
-    public List<AudioItem> getMusicItemsByTitle(String title) {
+    public List<AudioItem> getAudioItemsByTitle(String title) {
         List<AudioItem> allMusicWithProvidedTitle = musicItemRepository.findAll().stream()
                 .filter(MusicItem -> MusicItem.getTitle().equals(title)).toList();
         log.info("In getMusicItemsByTitle - {} music items found", allMusicWithProvidedTitle.size());
@@ -38,7 +38,7 @@ public class AudioServiceImpl implements AudioService {
     }
 
     @Override
-    public List<AudioItem> getMusicItemsByGenre(String genre) {
+    public List<AudioItem> getAudioItemsByGenre(String genre) {
         List<AudioItem> allMusicWithProvidedGenre = musicItemRepository.findAll().stream()
                 .filter(MusicItem -> MusicItem.getGenre().equals(genre)).toList();
         log.info("In getMusicItemsByGenre - {} music items found", allMusicWithProvidedGenre.size());
@@ -46,13 +46,13 @@ public class AudioServiceImpl implements AudioService {
     }
 
     @Override
-    public List<AudioItem> getAllMusicItems() {
+    public List<AudioItem> getAllAudioItems() {
         List<AudioItem> allMusicItems = musicItemRepository.findAll();
         log.info("In getAllMusicItems - {} music items found", allMusicItems.size());
         return allMusicItems;
     }
     @Override
-    public AudioItem getMusicItemById(UUID id) {
+    public AudioItem getAudioItemById(UUID id) {
         AudioItem musicItem = musicItemRepository.findById(id).orElse(null);
         if (musicItem == null) {
             log.info("In getMusicItemById - music item with ID {} was not found", id);

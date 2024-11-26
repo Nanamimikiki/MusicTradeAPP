@@ -1,74 +1,100 @@
 package org.mtapp.minio.service.impl;
 
-import io.minio.GetObjectArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.StatObjectArgs;
-import io.minio.errors.ErrorResponseException;
-import io.minio.errors.InsufficientDataException;
-import io.minio.errors.InternalException;
-import io.minio.errors.InvalidResponseException;
-import io.minio.errors.ServerException;
-import io.minio.errors.XmlParserException;
+import io.minio.*;
+import io.minio.errors.*;
+import io.minio.http.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.mtapp.minio.service.MinioService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 
 @Slf4j
 @Service
 public class MinioServiceImpl implements MinioService {
-    @Autowired
-    private MinioClient minioClient;
 
-    @Autowired
+    private final MinioClient minioClient;
+
     public MinioServiceImpl(MinioClient minioClient) {
         this.minioClient = minioClient;
     }
 
     @Override
-    public void uploadFile(String objectName, String bucketName, MultipartFile file) {
-        try {
-            minioClient.putObject(PutObjectArgs.builder().object(objectName)
-                    .stream(file.getInputStream(), -1, 10485760).build());
+    public void uploadFile(String bucketName, String objectName, MultipartFile file) {
+        try (InputStream inputStream = file.getInputStream()) {
+            if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+            }
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(objectName)
+                            .stream(inputStream, file.getSize(), -1)
+                            .contentType(file.getContentType())
+                            .build()
+            );
+            log.info("File '{}' uploaded to bucket '{}' successfully.", objectName, bucketName);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error uploading file '{}' to bucket '{}': {}", objectName, bucketName, e.getMessage());
+            throw new RuntimeException("Error uploading file", e);
         }
     }
 
     @Override
-    public byte[] downloadFile(String objectName, String bucketName) {
-        try (InputStream stream = minioClient
-                .getObject(GetObjectArgs.builder()
+    public byte[] downloadFile(String bucketName, String objectName) {
+        try (InputStream stream = minioClient.getObject(
+                GetObjectArgs.builder()
+                        .bucket(bucketName)
                         .object(objectName)
                         .build())) {
+            log.info("File '{}' downloaded from bucket '{}' successfully.", objectName, bucketName);
             return stream.readAllBytes();
-        } catch (IOException | InsufficientDataException | InvalidResponseException | ServerException |
-                 XmlParserException | NoSuchAlgorithmException | InvalidKeyException | ErrorResponseException |
-                 InternalException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error("Error downloading file '{}' from bucket '{}': {}", objectName, bucketName, e.getMessage());
+            throw new RuntimeException("Error downloading file", e);
         }
-        return null;
     }
-
 
     @Override
     public boolean fileExists(String bucketName, String objectName) {
         try {
-            minioClient.statObject(StatObjectArgs.builder()
-                    .bucket(bucketName)
-                    .object(objectName)
-                    .build());
+            minioClient.statObject(
+                    StatObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(objectName)
+                            .build()
+            );
             return true;
+        } catch (ErrorResponseException e) {
+            if (e.errorResponse().code().equals("NoSuchKey")) {
+                return false;
+            } else {
+                log.error("Error checking existence of file '{}' in bucket '{}': {}", objectName, bucketName, e.getMessage());
+                throw new RuntimeException("Error checking file existence", e);
+            }
         } catch (Exception e) {
-            return false;
+            log.error("Error checking existence of file '{}' in bucket '{}': {}", objectName, bucketName, e.getMessage());
+            throw new RuntimeException("Error checking file existence", e);
         }
     }
 
+    @Override
+    public String getFileLink(String bucketName, String fileName) {
+        try {
+            String url = minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .method(Method.GET)
+                            .bucket(bucketName)
+                            .object(fileName)
+                            .expiry(2)
+                            .build()
+            );
+            log.info("Generated presigned URL for file '{}' in bucket '{}'", fileName, bucketName);
+            return url;
+        } catch (Exception e) {
+            log.error("Error generating presigned URL for file '{}' in bucket '{}': {}", fileName, bucketName, e.getMessage());
+            throw new RuntimeException("Error generating file link", e);
+        }
+    }
 }

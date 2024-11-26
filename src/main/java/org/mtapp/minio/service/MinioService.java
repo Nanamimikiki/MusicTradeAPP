@@ -9,4 +9,6 @@ public interface MinioService {
     byte[]  downloadFile(String objectName, String bucketName);
 
     boolean fileExists(String bucketName, String filename);
+
+    String getFileLink(String bucketName, String fileName);
 }
