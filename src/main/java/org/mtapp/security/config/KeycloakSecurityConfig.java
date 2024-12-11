@@ -16,6 +16,7 @@ public class KeycloakSecurityConfig {
 
     @Bean
     public KeycloakSpringBootConfigResolver KeycloakConfigResolver() {
+
         return new KeycloakSpringBootConfigResolver();
     }
 }
