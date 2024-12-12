@@ -36,18 +36,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(User user) {
-        Set<Role> roles = new HashSet<>();
-        Role role = roleRepository.findRoleByName("ROLE_USER").orElse(null);
-        if (role == null) {
-            log.info("In registerUser role - {} not found", "ROLE_USER");
-        }
+        Role userRole = roleRepository.findRoleByName("ROLE_USER")
+                .orElseThrow(() -> new IllegalStateException("Default user role not found"));
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(roles);
         user.setStatus(Status.ACTIVE);
+
+        Set<Role> roles = new HashSet<>();
+        roles.add(userRole);
+        user.setRoles(roles);
+
         User registeredUser = userRepository.save(user);
-        log.info("In registerUser: {} successfully registered", registeredUser);
+        log.info("User '{}' registered successfully with roles: {}", registeredUser.getUsername(), registeredUser.getRoles());
         return registeredUser;
     }
+
 
     @Override
     public User loginUser(User user) {
