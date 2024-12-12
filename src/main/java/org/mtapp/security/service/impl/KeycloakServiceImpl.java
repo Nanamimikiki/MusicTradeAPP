@@ -71,12 +71,10 @@ public class KeycloakServiceImpl implements KeycloakService {
             UserRepresentation userRepresentation = new UserRepresentation();
             userRepresentation.setUsername(username);
             userRepresentation.setEnabled(true);
-
             CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
             credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
             credentialRepresentation.setValue(password);
             userRepresentation.setCredentials(Collections.singletonList(credentialRepresentation));
-
             try (Response response = keycloak.realm(keycloakRealm).users().create(userRepresentation)) {
                 if (response.getStatus() != 201) {
                     log.error("Failed to create user: {}", response.readEntity(String.class));
