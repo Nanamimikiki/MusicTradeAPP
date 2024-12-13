@@ -1,21 +1,23 @@
 package org.mtapp.user.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.mtapp.user.dto.UserDto;
 import org.mtapp.user.model.Role;
 import org.mtapp.user.model.Status;
 import org.mtapp.user.model.User;
+import org.mtapp.user.repository.RoleRepository;
 import org.mtapp.user.repository.UserRepository;
 import org.mtapp.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.mtapp.user.repository.RoleRepository;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -51,22 +53,21 @@ public class UserServiceImpl implements UserService {
         return registeredUser;
     }
 
-
     @Override
-    public User loginUser(User user) {
-        User foundUser = userRepository.findByUsername(user.getUsername()).orElse(null);
-        if (foundUser == null) {
-            log.info("In loginUser - user with username {} was not found", user.getUsername());
+    public User loginUser(String username, String password) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            log.info("In loginUser - user with username {} was not found", username);
             return null;
         }
-        if (!passwordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
-            log.info("In loginUser - password does not match for user {}", user.getUsername());
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            log.info("User {} logged in successfully", username);
+            return user;
+        } else {
+            log.info("In loginUser - password does not match for user {}", username);
             return null;
         }
-        log.info("In loginUser - user {} successfully logged in", foundUser);
-        return foundUser;
     }
-
 
     @Override
     public List<User> getAllUsers() {
@@ -78,7 +79,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getBannedUsers() {
         List<User> bannedUsers = userRepository.findAll().stream()
-                .filter(user -> user.getStatus() == Status.BANNED).toList();
+                .filter(u -> u.getStatus() == Status.BANNED)
+                .toList();
         log.info("In getBannedUsers - {} banned users found", bannedUsers.size());
         return bannedUsers;
     }
@@ -86,10 +88,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getUsersWithRole(String role) {
         List<User> usersWithRole = userRepository.findAll().stream()
-                .filter(user -> user.getRoles().stream().anyMatch(Role -> Role.getName().equals(role))).toList();
+                .filter(u -> u.getRoles().stream().anyMatch(r -> r.getName().equals(role)))
+                .toList();
         log.info("In getUsersWithRole - {} users with role {} found", usersWithRole.size(), role);
         return usersWithRole;
     }
+
     @Override
     public List<User> findUsersRegisteredBetween(Date start, Date end) {
         return userRepository.findByRegistrationDateBetween(start, end);
@@ -125,7 +129,6 @@ public class UserServiceImpl implements UserService {
         }
         return user;
     }
-
 
     @Override
     public void banUser(String username) {
@@ -176,21 +179,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User loginUser(String username, String password) {
-        User user = userRepository.findByUsername(username).orElse(null);
-        if (user != null) {
-            if (user.getPassword().equals(passwordEncoder.encode(password))) {
-                log.info("User {} logged in successfully", username);
-                return user;
-            }
-            log.info("In loginUser - password does not match for user {}", username);
-            return null;
-        }
-        log.info("In loginUser - user with username {} was not found", username);
-        return null;
-    }
-
-    @Override
     public void updateUserEmail(UUID userId, String newEmail) {
         User user = userRepository.findById(userId).orElse(null);
         if (user != null) {
@@ -203,9 +191,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(UUID userId) {
         User user = userRepository.findById(userId).orElse(null);
-        if (user!= null) {
+        if (user != null) {
             userRepository.delete(user);
             log.info("User with ID {} deleted successfully", userId);
         }
     }
+    public UserDto toUserDto(User user) {
+        if (user == null) return null;
+        Set<String> roleNames = user.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
+
+        return new UserDto(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                roleNames
+        );
+    }
+
 }

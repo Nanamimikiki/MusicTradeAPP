@@ -1,5 +1,6 @@
 package org.mtapp.user.service;
 
+import org.mtapp.user.dto.UserDto;
 import org.mtapp.user.model.User;
 
 import java.util.Date;
@@ -9,7 +10,7 @@ import java.util.UUID;
 public interface UserService {
     User registerUser(User user);
 
-    User loginUser(User user);
+    User loginUser(String username, String password);
 
     List<User> getAllUsers();
 
@@ -32,8 +33,8 @@ public interface UserService {
     void unbanUser(UUID userID);
 
     void unbanUser(String username);
+    public UserDto toUserDto(User user);
 
-    User loginUser(String username, String password);
 
     void updateUserEmail(UUID userId, String newEmail);
 

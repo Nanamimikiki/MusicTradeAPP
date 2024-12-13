@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
@@ -48,7 +47,7 @@ public class ImageServiceImpl implements ImageService {
         ImageItem imageItem = new ImageItem();
         imageItem.setTitle(fileName);
         imageItem.setLink(minioService.getFileLink(bucketName, fileName));
-        imageItem.setCreatedAt(Date.from(Instant.now()));
+        imageItem.setCreatedAt(Instant.now());
         imageItem.setOwner(owner.getUsername());
         imageItem.setTags(tags);
 
